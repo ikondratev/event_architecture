@@ -12,6 +12,9 @@ Rails.configuration.to_prepare do
 
   # Subscribe event handlers below
   Rails.configuration.event_store.tap do |store|
+    store.subscribe(RideRequestedHandler.new(store), to: [RideRequested])
+    store.subscribe(RideOfferedHandler.new, to: [RideOffered])
+    store.subscribe(RideModelHandler.new, to: [RideRequested])
     # store.subscribe(InvoiceReadModel.new, to: [InvoicePrinted])
     # store.subscribe(lambda { |event| SendOrderConfirmation.new.call(event) }, to: [OrderSubmitted])
     # store.subscribe_to_all_events(lambda { |event| Rails.logger.info(event.event_type) })

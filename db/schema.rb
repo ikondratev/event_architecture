@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_08_132718) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_08_150029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_08_132718) do
     t.index ["stream", "position"], name: "index_event_store_events_in_streams_on_stream_and_position", unique: true
   end
 
+  create_table "rides", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "driver_id"
+    t.uuid "car_id"
+    t.uuid "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["car_id"], name: "index_rides_on_car_id"
+    t.index ["driver_id"], name: "index_rides_on_driver_id"
+    t.index ["user_id"], name: "index_rides_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -60,4 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_08_132718) do
   end
 
   add_foreign_key "cars", "drivers"
+  add_foreign_key "rides", "cars"
+  add_foreign_key "rides", "drivers"
 end
