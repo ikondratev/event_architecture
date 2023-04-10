@@ -22,6 +22,13 @@ class RidesController < ApplicationController
   end
 
   def reject
-
+    current_driver.with_lock do
+      ride_id = params[:ride_id]
+      event_store.with_metadata(ride_id: ride_id) do
+        DriverRepository.new.with_driver(current_driver.id) do |driver|
+          driver.reject_ride(Ride.find(ride_id))
+        end
+      end
+    end
   end
 end

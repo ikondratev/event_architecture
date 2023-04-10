@@ -8,6 +8,11 @@ class RideModelHandler
         driver_id: event.data[:driver_id],
         car_id: event.data[:car_id]
       )
+    when RideRejected
+      Ride.find(event.data[:ride_id]).update(
+        driver_id: nil,
+        car_id: nil
+      )
     end
   end
 end
